@@ -34,6 +34,12 @@
         outline-style: solid;
 
       }
+
+      #attending{
+       color: green;
+      }
+
+      table{ table-layout:fixed; word-break: break-all; }
     </style>
     
       
@@ -89,7 +95,31 @@
     <?php
         require_once("support.php");
         $result =getallEvents(); //array of filters and distance
-
+        $num_rows = $result->num_rows;
+        $enviro_checkbox = "checked";
+        $rec_checkbox = "checked";
+        $arts_checkbox = "checked";
+        $scriptName = $_SERVER["PHP_SELF"];
+        if (isset($_POST["submitInfo"])) {
+          if (isset($_POST['categories'])) {
+            $filters = $_POST['categories'];
+            if(!in_array("Environmental", $filters)){
+                $enviro_checkbox = "";
+            }
+            if(!in_array("Recreation", $filters)){
+                $rec_checkbox = "";
+            }
+            if(!in_array("Arts", $filters)){
+                $arts_checkbox = "";
+            }
+            $result = filterBy($filters);
+            $num_rows = $result->num_rows;
+          }
+        }
+        if (isset($_POST["Attending"])) {
+            attendEvent($_POST["id"]);
+            header("Refresh:0"); //refreshes page to add text Attending!
+        }
         $firsthalf= <<<EOBODY
           <ul>
           <div id="bar"><li><a class="active" href="default.asp">Browse Events</a></li></div>
@@ -98,31 +128,65 @@
           <div id="bar"><li><a href="about.asp">About</a></li></div>
           <div id="title"><li><a href="">Welcome to Event Garden!</a></li></div>
         </ul>
-        <div id="right-panel" > <ul>    
+        <div id="right-panel" > <br>Filter by 
+        <form action="$scriptName" method="post">
+        <input type="checkbox" name="categories[]" id="Environmental"
+              value="Environmental" {$enviro_checkbox}/>Environmental
+        <input type="checkbox" name="categories[]" id="Recreation" 
+              value="Recreation" $rec_checkbox/>Recreation
+        <input type="checkbox" name="categories[]" id="Arts" 
+              value="Arts" $arts_checkbox/>Arts<br>
+        <input type="submit" value="Submit Data" name="submitInfo"/>
+        </form>
+        <br> 
 EOBODY;
-          $num_rows = $result->num_rows;
+          
 
             for ($row_index = 0; $row_index < $num_rows; $row_index++) {
                 $result->data_seek($row_index);
                 $row = $result->fetch_array(MYSQLI_ASSOC);
-                //echo "{$row['event_name']}";
-                $string = <<<EOBODY
-                <div id= "event"><li>{$row['event_name']}<br>{$row['event_date']}<br>{$row['event_time']}</li></div>
-EOBODY;
-                $firsthalf = $firsthalf.$string;
+                $time_arr = split(":",$row['event_time']);
+                $time = "";
+                if(intval($time_arr[0]) > 12){
+                  $temp = intval($time_arr[0])-12;
+                  $time= $time."$temp:{$time_arr[1]} PM";
+                }else{
+                  $time = $time.$row['event_time']." AM";
+                }
+                $pretty_date = prettifyDate($row['event_date']);
+                //$descript = chunk_split($row['description'], 5)."<br>";
                 
+                $string = <<<EOBODY
+                <div id= "event"><table cellpadding="1" cellspacing="1">
+                <col width="150px" />
+                <col width="150px" />
+                <tr> <td>{$row['event_name']}</td>
+EOBODY;
+                $attending = "";
+                if($row['attending']){$attending = "<td><div id=\"attending\">Attending!</div></td>";}
+
+                $second = <<<EOBODY
+                </tr>
+                <tr> <td>{$pretty_date} <br> {$time}<br>{$row['location']} </td>
+                 <td>{$row['description']}<br></td></tr>
+                <tr> <td><form action="$scriptName" method= "post">
+                  <input type="hidden" name="id" id="id" value="{$row['id']}">
+                  <input type="submit" value="Attend" name="Attending"/>
+                </form></td></tr>
+                </table></div>
+EOBODY;
+
+                $firsthalf = $firsthalf.$string.$attending.$second;
+                 
             }
               
-        $secondhalf= " </ul>
+        $secondhalf= "
         </div>
         <div id=\"map\"></div>
         <script src=\"https://maps.googleapis.com/maps/api/js?key=AIzaSyBuC1WRk_3tYD5kg60VeSJ2Axmt4uNVEI4&libraries=places&callback=initMap\" async defer>
         //https://developers.google.com/maps/documentation/javascript/examples/place-search</script>
 "
 ;
-
-    
-    //echo $page;
     
     echo $firsthalf.$secondhalf;
     
