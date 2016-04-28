@@ -5,6 +5,7 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="topbar.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <style type="text/css">
       html, body {
         height: 100%;
@@ -112,53 +113,73 @@
 
 <?php
     require_once("support.php");
-	$errors = "";
+  $errors = "";
+  $firsthalf= <<<EOBODY
+          <ul>
+          <div id="bar"><li><a  href="map_php.php">Browse Events</a></li></div>
+          <div id="bar"><li><a class="active" href="submit.php">Add New Event</a></li></div>
+          <div id="bar"><li><a href="profile.php?profile_name=EventPlanner1">My Profile</a></li></div>
+          <div id="bar"><li><a href="about.asp">About</a></li></div>
+          <div id="title"><li><a href="">Welcome to Event Garden!</a></li></div>
+        </ul>
+EOBODY;
 
-
-    
-	if (isset($_POST["submitInfo"])) {
+    $name="";
+    $description="";
+    $address = "";
+  if (isset($_POST["submitInfo"])) {
         $name = trim($_POST["event_name"]);
         $date = trim($_POST["date"]);
         $time= trim($_POST["time"]);
         $description= trim($_POST["description"]);
         $address = trim($_POST["address"]);
-        $category = $_POST["category"];
+        
+        if(!isset($_POST["category"])){
+          echo "<h2>Must enter at least one category</h2>";
+        }else{
+          $category = $_POST["category"];
+          $equip_1 = $_POST["equip_1"];
+          $quant_1 = $_POST["quant_1"];
+          $equip_2 = $_POST["equip_2"];
+          $quant_2 = $_POST["quant_2"];
+          $equip_3 = $_POST["equip_3"];
+          $quant_3 = $_POST["quant_3"];
 
-        $equip_1 = $_POST["equip_1"];
-        $quant_1 = $_POST["quant_1"];
-        $equip_2 = $_POST["equip_2"];
-        $quant_2 = $_POST["quant_2"];
-        $equip_3 = $_POST["equip_3"];
-        $quant_3 = $_POST["quant_3"];
+          $equip_string = $equip_1."-".$quant_1."/".$equip_2."-".$quant_2."/".$equip_3."-".$quant_3;
 
-        $equip_string = $equip_1."-".$quant_1."/".$equip_2."-".$quant_2."/".$equip_3."-".$quant_3;
-
-        addEvent($name,$date,$time,$description,$address,$category, $equip_string);
-        header("Location: map_php.php"); /* Redirect browser */
-        exit();
-		    
-	}
+          $bool = addEvent($name,$date,$time,$description,$address,$category, $equip_string);
+          if($bool){
+            header("Location: map_php.php"); /* Redirect browser */
+            exit();
+          }else{
+            echo "<h2>Date and Time entered is invalid. Try Again.</h2>";
+          }
+        }
+        
+  }
     
-	$scriptName = $_SERVER["PHP_SELF"];
+  $scriptName = $_SERVER["PHP_SELF"];
     $page = <<<EOBODY
     <div class="form-style-5">
     <form action="$scriptName" method="post">
         <fieldset>
         <legend><span class="number">1</span> <strong>Event Info</strong></legend>
-        <strong>Event Name:</strong><input type="text" name="event_name"><br>
+        <strong>Event Name:</strong><input type="text" name="event_name" value = $name><br>
         <strong>Date (xxxx-xx-xx):</strong><input type="date" name="date"><br>
         <strong>Time:</strong>
         <input type="time" name="time">
         <br>
        <strong>Description:</strong>
-       <textarea name="description"></textarea><br>
-       <strong>Address:</strong><input type="text" name="address"><br>
+       <textarea name="description" value=$description></textarea><br>
+       <strong>Address:</strong><input type="text" name="address" value=$address><br>
        </fieldset>
        <fieldset>
         <legend><span class="number">2</span> <strong>Filters</strong></legend>
-       <input type="checkbox" name="category[]" value="Environmental" />Environmental
-       <input type="checkbox" name="category[]" value="Recreation" />Recreation
-       <input type="checkbox" name="category[]" id="Arts" value="Arts" />Arts<br><br>
+       <input type="checkbox" name="category[]" value="Environmental" />Environmental <i class="fa fa-recycle" aria-hidden="true"></i>
+       <input type="checkbox" name="category[]" value="Recreation" />Recreation <i class="fa fa-futbol-o" aria-hidden="true"></i>
+       <input type="checkbox" name="category[]" id="Arts" value="Arts" />Arts <i class="fa fa-paint-brush" aria-hidden="true"></i> <br>
+       <input type="checkbox" name="category[]" value="Animals" />Animals <i class="fa fa-paw" aria-hidden="true"></i>
+       <input type="checkbox" name="category[]" value="Social" />Social <i class="fa fa-glass" aria-hidden="true"></i><br><br>
        </fieldset>
        <fieldset>
         <legend><span class="number">3</span> <strong>Equipment</strong></legend>
@@ -176,17 +197,9 @@
     </div>
     
 EOBODY;
-	//$body = $topPart.$errors;
+  //$body = $topPart.$errors;
 
-    $firsthalf= <<<EOBODY
-          <ul>
-          <div id="bar"><li><a  href="map_php.php">Browse Events</a></li></div>
-          <div id="bar"><li><a class="active" href="submit.php">Add New Event</a></li></div>
-          <div id="bar"><li><a href="profile.php">My Profile</a></li></div>
-          <div id="bar"><li><a href="about.asp">About</a></li></div>
-          <div id="title"><li><a href="">Welcome to Event Garden!</a></li></div>
-        </ul>
-EOBODY;
+    
     echo $firsthalf.$page;
     
 

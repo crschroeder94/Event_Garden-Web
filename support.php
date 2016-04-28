@@ -83,6 +83,10 @@ function addEvent($name,$date,$time,$description,$address,$category, $equip){
     if ($db_connection->connect_error) {
         die($db_connection->connect_error);
     }
+    if(!valiDate($date,$time)){
+        $db_connection->close();
+        return false;
+    }
     
     $temp = ",".implode(',',$category);
     $filt = [];
@@ -104,6 +108,7 @@ function addEvent($name,$date,$time,$description,$address,$category, $equip){
     
     /* Closing connection */
     $db_connection->close();
+    return true;
 }
 
 function prettifyDate($date){ //in format year-month-day
@@ -111,6 +116,18 @@ function prettifyDate($date){ //in format year-month-day
     $months = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"];
     $month = $months[intval($arr[1])];
     return $month." ".intval($arr[2]).", ".$arr[0];
+}
+
+function valiDate($date, $time){
+    $currdate = date("Y-m-d");
+    $currtime = date("h:i");
+    if($date < $currdate){
+        return false;
+    }elseif($date == $currdate && $time < $currtime){
+        return false;
+    }
+    return true;
+   
 }
 
 

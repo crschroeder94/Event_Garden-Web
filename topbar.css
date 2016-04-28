@@ -36,3 +36,49 @@ ul {
 .active {
     background-color: #4CAF50;
 }
+#search {
+    display: block;
+padding-left: 50px;
+    height: 45px;
+    vertical-align: top;
+}
+#search_text{
+    height: 45px;
+    width: 297px;
+    padding: 15px 0 15px 20px;
+    font-size: 16px;
+    font-family: Helvetica;
+    border: 0 none;
+ 
+    color: white;
+    outline: none;
+    background-color: #333;
+    float: left;
+    box-sizing: border-box;
+    transition: all 0.15s;
+}
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: white;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: white;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: white;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: white;
+}
+#search_text:focus {
+    background-color:#4CAF50;
+}
+#search_button {
+    border: 0 none;
+    background: #1f7f5c url(https://eaassets-a.akamaihd.net/origin-com-store-webassets/1.0.0.416542_4949256cada8886def0a2e0573754aa5c23e0910c695d4ae4a58cca22d73b18c/bundles/originstore/images/searchIcon.png) center no-repeat;
+    width: 60px;
+    float: left;
+    
+    height: 40px;
+    cursor: pointer;
+    background-color: #333;
+}
