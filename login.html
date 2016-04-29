@@ -18,9 +18,11 @@
       <button>create</button>
       <p class="message">Already registered? <a href="#">Sign In</a></p>
     </form>
-    <form class="login-form" action="map_php.php">
+    <form class="login-form" method="POST" action="map_php.php">
       <input type="text" placeholder="username" value="EventPlanner1"/>
       <input type="password" placeholder="password" value="password"/>
+      <input type="hidden" id="latitude" name = "latitude">
+<input type="hidden" id="longitude" name = "longitude">
       <button id="login">login</button>
       <p class="message">Not registered? <a href="#">Create an account</a></p>
     </form>
@@ -33,6 +35,25 @@
         $('.message a').click(function(){
    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
 });
+        lat(function (latitude, longitude) {
+        //alert("lat: " + latitude + ", lon: " + longitude);
+        document.getElementById("latitude").value = latitude;
+        document.getElementById("longitude").value = longitude;
+        
+    });
+        
+         function lat(callback) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+        callback.call(null, lat, lon);
+    }, function (error) {
+        console.log("Something went wrong: ", error);
+    });
+}
+
+
+    
         </script>
 
   </body>

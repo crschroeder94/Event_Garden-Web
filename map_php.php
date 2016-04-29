@@ -96,13 +96,16 @@
     </style>
       <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
   </head>
   <body>
     <?php
         require_once("support.php");
         $result =getallEvents(); //array of filters and distance
         $events_arr = [];
+
+        //echo $_POST["latitude"];
+        //echo $_POST["longitude"];
+
         $num_rows = $result->num_rows;
         $enviro_checkbox = "checked";
         $rec_checkbox = "checked";
@@ -167,11 +170,11 @@
         <input type="Submit" id= "filters" value="Filter" name="submitFilters"/>
         </form>
         <br> 
-        <div id="event_list"></div>
+
+        
 EOBODY;
 
 //http://designmodo.com/create-drop-down-menu-search-box/        
-            $str = "<div id=\"event_list\"></div>";
 
             for ($row_index = 0; $row_index < $num_rows; $row_index++) {
                 $result->data_seek($row_index);
@@ -213,7 +216,7 @@ EOBODY;
                   </form></td></tr>
                   </table></div></div>
 EOBODY;
-                $firsthalf = $firsthalf.$string.$attending.$second.$str;
+                $firsthalf = $firsthalf.$string.$attending.$second;
               }
               array_push($events_arr, $row);   
             }
@@ -231,6 +234,7 @@ EOBODY;
  <script type="text/javascript">        
       var events = '.json_encode($events_arr).'
  </script>';
+ //echo 'current location is <script type="text/javascript"> alert(getPosition()); </script>';
 //echo JSON.parse($events_arr);
  //print_r($events_arr);
     echo $firsthalf.$secondhalf;
@@ -242,7 +246,7 @@ EOBODY;
     var map;
 
     var filter_dist = document.getElementById("filter_dist").value;
- 
+    
     //$( document ).click(function() {
     //  $( "#toggle" ).effect("highlight", {color: 'blue'}, 3000);
     //});
@@ -278,7 +282,6 @@ EOBODY;
         alert("Browser does not support geolocation");
       }
       }
-
     function createMarkers(pos) {
         var marker1 = new google.maps.Marker({
             map: map,
@@ -329,12 +332,14 @@ EOBODY;
                         //alert(button);
                         var attend = "attend_"+event.id;
                         //addEventToList(event);
-                        
+                        return true;
                         
                       } 
+                      return false;
                     } 
                     }); 
       }
+
 
       function addAttendButtonListener(id){
         //alert(id);
