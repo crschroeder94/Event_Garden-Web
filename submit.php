@@ -121,6 +121,12 @@
           <div id="bar"><li><a class="active" href="submit.php">Add New Event</a></li></div>
           <div id="bar"><li><a href="profile.php?profile_name=EventPlanner1">My Profile</a></li></div>
           <div id="bar"><li><a href="about.asp">About</a></li></div>
+          <div id="bar"><li id="search">
+          <form action="profile.php" method="get">
+            <input type="text" name="profile_name" id="search_text" placeholder="Search Organizations"/>
+            <input type="submit" name="search_button" id="search_button"></a>
+          </form>
+          </li></div>
           <div id="title"><li><a href="">Welcome to Event Garden!</a></li></div>
         </ul>
 EOBODY;

@@ -121,11 +121,17 @@ h2 span {
     </style>
     </head>
     <body>
-      <ul>
-          <div id="bar"><li><a  href="map_php.php">Browse Events</a></li></div>
-          <div id="bar"><li><a  href="submit.php">Add New Event</a></li></div>
+<ul>
+          <div id="bar"><li><a href="map_php.php">Browse Events</a></li></div>
+          <div id="bar"><li><a href="submit.php">Add New Event</a></li></div>
           <div id="bar"><li><a class="active" href="profile.php?profile_name=EventPlanner1">My Profile</a></li></div>
-          <div id="bar"><li><a href="about.php">About</a></li></div>
+          <div id="bar"><li><a href="about.asp">About</a></li></div>
+          <div id="bar"><li id="search">
+          <form action="profile.php" method="get">
+            <input type="text" name="profile_name" id="search_text" placeholder="Search Organizations"/>
+            <input type="submit" name="search_button" id="search_button"></a>
+          </form>
+          </li></div>
           <div id="title"><li><a href="">Welcome to Event Garden!</a></li></div>
         </ul>
         <?php
@@ -196,6 +202,56 @@ h2 span {
             
             
             
+EOBODY;
+        }else{
+          $str = <<<EOBODY
+            <div id="right-panel">
+            <div id="name"><b>{$_GET["profile_name"]}</b></div>
+            <img class="profile_pic" src="profile.png" alt="Profile Picture" width="150" height="100">
+            <div id="info">Member since: <div id="data">3/1/2016 </div><br>
+            Events Hosted:<br> <div id="data">12 </div><br>
+            Events Attended:<br> <div id="data">2 </div><br>
+            <div id="data">"We are a local charity aimed at feeding the homeless. Join our Fight!"<br><br> <b>INSERT REPUTATION PICTURE</b></div>
+            
+            </div>
+          </div>
+          <div id="recent_activity_text"><b>Recent Activity:</b></div>
+          <div id="feed">
+      <ul>
+        <li>
+          
+            <div id="feed_item">
+            <div id = "feed_text">{$_GET["profile_name"]} is hosting "5K for World Hunger" </div><div id="date"><br>4/20/2016</div>
+            </div>
+          
+        </li>
+
+        <li>
+            <div id="feed_item">
+            <div id = "feed_text">{$_GET["profile_name"]} " is hosting "Feed the Homeless"</div><div id="date"><br>4/16/2016</div>
+            </div>
+        </li>
+
+        <li>
+            <div id="feed_item">
+            <div id = "feed_text">{$_GET["profile_name"]} is hosting "Spring Fling" </div><div id="date"><br>4/10/2016</div>
+            </div>
+        </li>
+
+        <li>
+            <div id="feed_item">
+            <div id = "feed_text">{$_GET["profile_name"]} attended "Homeless NonProfit Convention" </div><div id="date"><br>3/20/2016</div>
+            </div>
+        </li>
+
+        <li>
+            <div id="feed_item">
+            <div id = "feed_text">{$_GET["profile_name"]} became a member!" </div><div id="date"><br>3/1/2016</div>
+            </div>
+        </li>
+
+</ul>
+</div>
 EOBODY;
         }
 
