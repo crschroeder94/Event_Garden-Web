@@ -24,7 +24,7 @@
         height:775px;
         padding-left: 10;
         overflow-y: scroll;
-        background-color:  #c6d8ec;
+        background-color:  #F7FBF7;
         
       }
 
